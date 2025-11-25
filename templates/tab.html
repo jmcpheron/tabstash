@@ -5,10 +5,10 @@
 {% block content %}
 <article class="tab-page">
     <header class="tab-header">
-        <a href="/" class="back-link">&larr; All Tabs</a>
+        <a href="{{ base_url }}/" class="back-link">&larr; All Tabs</a>
         <h1 class="tab-title">{{ tab.metadata.title }}</h1>
         <p class="tab-artist">
-            <a href="/artist/{{ tab.artist_slug }}.html">{{ tab.metadata.artist }}</a>
+            <a href="{{ base_url }}/artist/{{ tab.artist_slug }}.html">{{ tab.metadata.artist }}</a>
         </p>
 
         <div class="tab-meta">
@@ -55,13 +55,13 @@
     </div>
 
     <footer class="tab-footer">
-        <a href="/" class="back-link">&larr; Back to all tabs</a>
+        <a href="{{ base_url }}/" class="back-link">&larr; Back to all tabs</a>
     </footer>
 </article>
 {% endblock %}
 
 {% block scripts %}
-<script src="/static/js/auto-scroll.js"></script>
+<script src="{{ base_url }}/static/js/auto-scroll.js"></script>
 <script>
     // Initialize auto-scroll
     const tabContent = document.getElementById('tab-content');

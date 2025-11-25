@@ -34,7 +34,13 @@ def main():
     default="dist",
     help="Output directory for generated site",
 )
-def build(content: str, output: str):
+@click.option(
+    "--base-url",
+    "-b",
+    default="",
+    help="Base URL path for GitHub Pages subpath hosting (e.g., /tabstash)",
+)
+def build(content: str, output: str, base_url: str):
     """Build the static site."""
     root = get_project_root()
 
@@ -43,6 +49,7 @@ def build(content: str, output: str):
         templates_dir=root / "templates",
         static_dir=root / "static",
         output_dir=root / output,
+        base_url=base_url,
     )
 
     result = builder.build()

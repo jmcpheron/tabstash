@@ -6,7 +6,9 @@ from pathlib import Path
 from .models import SearchDocument, Tab
 
 
-def generate_search_index(tabs: list[Tab], output_path: Path) -> int:
+def generate_search_index(
+    tabs: list[Tab], output_path: Path, base_url: str = ""
+) -> int:
     """Generate JSON search index for MiniSearch.
 
     Returns the number of documents indexed.
@@ -17,7 +19,7 @@ def generate_search_index(tabs: list[Tab], output_path: Path) -> int:
             title=tab.metadata.title,
             artist=tab.metadata.artist,
             tags=tab.metadata.tags,
-            url=f"/tabs/{tab.artist_slug}/{tab.slug}.html",
+            url=f"{base_url}/tabs/{tab.artist_slug}/{tab.slug}.html",
         ).model_dump()
         for tab in tabs
     ]

@@ -30,7 +30,7 @@ jobs:
         run: uv sync
 
       - name: Build site
-        run: uv run tabstash build --output dist
+        run: uv run tabstash build --output dist --base-url /tabstash
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

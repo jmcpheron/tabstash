@@ -34,16 +34,20 @@ class SiteBuilder:
         templates_dir: Path,
         static_dir: Path,
         output_dir: Path,
+        base_url: str = "",
     ):
         self.content_dir = content_dir
         self.templates_dir = templates_dir
         self.static_dir = static_dir
         self.output_dir = output_dir
+        self.base_url = base_url.rstrip("/")
 
         self.env = Environment(
             loader=FileSystemLoader(templates_dir),
             autoescape=True,
         )
+        # Add base_url to all templates
+        self.env.globals["base_url"] = self.base_url
 
     def build(self) -> BuildResult:
         """Build the complete static site."""
@@ -88,7 +92,9 @@ class SiteBuilder:
 
         # Generate search index
         search_index_path = self.output_dir / "search-index.json"
-        result.search_index_size = generate_search_index(tabs, search_index_path)
+        result.search_index_size = generate_search_index(
+            tabs, search_index_path, self.base_url
+        )
 
         return result
 

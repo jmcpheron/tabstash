@@ -5,7 +5,7 @@
 {% block content %}
 <div class="artist-page">
     <header class="artist-header">
-        <a href="/" class="back-link">&larr; All Artists</a>
+        <a href="{{ base_url }}/" class="back-link">&larr; All Artists</a>
         <h1>{{ artist_name }}</h1>
         <p class="tab-count">{{ tabs | length }} tab{% if tabs | length != 1 %}s{% endif %}</p>
     </header>
@@ -13,7 +13,7 @@
     <ul class="tab-list">
         {% for tab in tabs %}
         <li class="tab-item">
-            <a href="/tabs/{{ tab.artist_slug }}/{{ tab.slug }}.html" class="tab-link">
+            <a href="{{ base_url }}/tabs/{{ tab.artist_slug }}/{{ tab.slug }}.html" class="tab-link">
                 <span class="tab-title">{{ tab.metadata.title }}</span>
                 <div class="tab-meta-inline">
                     {% if tab.metadata.difficulty %}

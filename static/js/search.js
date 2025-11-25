@@ -12,8 +12,11 @@
 
     if (!searchInput) return;
 
+    // Get base URL from data attribute on body or default to empty
+    const baseUrl = document.body.dataset.baseUrl || '';
+
     // Load search index
-    fetch('/search-index.json')
+    fetch(baseUrl + '/search-index.json')
         .then(response => response.json())
         .then(data => {
             searchData = data;

@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}TabStash{% endblock %}</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="{{ base_url }}/static/css/style.css">
     {% block head %}{% endblock %}
 </head>
-<body>
+<body data-base-url="{{ base_url }}">
     <header class="site-header">
-        <a href="/" class="site-logo">TabStash</a>
+        <a href="{{ base_url }}/" class="site-logo">TabStash</a>
         <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
             <span class="theme-icon"></span>
         </button>

@@ -19,7 +19,7 @@
         <h2>Browse by Artist</h2>
         <div class="artist-grid">
             {% for artist in artists %}
-            <a href="/artist/{{ artist.slug }}.html" class="artist-card">
+            <a href="{{ base_url }}/artist/{{ artist.slug }}.html" class="artist-card">
                 <span class="artist-name">{{ artist.name }}</span>
                 <span class="artist-count">{{ artist.count }} tab{% if artist.count != 1 %}s{% endif %}</span>
             </a>
@@ -32,7 +32,7 @@
         <ul class="tab-list" id="tab-list">
             {% for tab in tabs %}
             <li class="tab-item" data-id="{{ tab.artist_slug }}/{{ tab.slug }}">
-                <a href="/tabs/{{ tab.artist_slug }}/{{ tab.slug }}.html" class="tab-link">
+                <a href="{{ base_url }}/tabs/{{ tab.artist_slug }}/{{ tab.slug }}.html" class="tab-link">
                     <span class="tab-title">{{ tab.metadata.title }}</span>
                     <span class="tab-artist">{{ tab.metadata.artist }}</span>
                 </a>
@@ -45,5 +45,5 @@
 
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/minisearch@6.3.0/dist/umd/index.min.js"></script>
-<script src="/static/js/search.js"></script>
+<script src="{{ base_url }}/static/js/search.js"></script>
 {% endblock %}
