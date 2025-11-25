@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}{{ tab.metadata.title }} - {{ tab.metadata.artist }} | TabStash{% endblock %}
+
+{% block content %}
+<article class="tab-page">
+    <header class="tab-header">
+        <a href="/" class="back-link">&larr; All Tabs</a>
+        <h1 class="tab-title">{{ tab.metadata.title }}</h1>
+        <p class="tab-artist">
+            <a href="/artist/{{ tab.artist_slug }}.html">{{ tab.metadata.artist }}</a>
+        </p>
+
+        <div class="tab-meta">
+            {% if tab.metadata.key %}
+            <span class="meta-badge">Key: {{ tab.metadata.key }}</span>
+            {% endif %}
+            {% if tab.metadata.capo > 0 %}
+            <span class="meta-badge">Capo: {{ tab.metadata.capo }}</span>
+            {% endif %}
+            {% if tab.metadata.tuning != "standard" %}
+            <span class="meta-badge">{{ tab.metadata.tuning }}</span>
+            {% endif %}
+            {% if tab.metadata.difficulty %}
+            <span class="meta-badge difficulty-{{ tab.metadata.difficulty }}">{{ tab.metadata.difficulty }}</span>
+            {% endif %}
+            {% if tab.metadata.bpm %}
+            <span class="meta-badge">{{ tab.metadata.bpm }} BPM</span>
+            {% endif %}
+        </div>
+
+        {% if sections %}
+        <nav class="section-nav">
+            {% for section in sections %}
+            <a href="#section-{{ loop.index }}" class="section-pill">{{ section }}</a>
+            {% endfor %}
+        </nav>
+        {% endif %}
+    </header>
+
+    <div class="tab-controls">
+        <button id="auto-scroll-toggle" class="control-btn">
+            <span class="play-icon">&#9654;</span>
+            <span class="btn-text">Auto-scroll</span>
+        </button>
+        <div class="speed-control" id="speed-control" style="display: none;">
+            <button class="speed-btn" data-speed="slow">Slow</button>
+            <button class="speed-btn active" data-speed="medium">Medium</button>
+            <button class="speed-btn" data-speed="fast">Fast</button>
+        </div>
+    </div>
+
+    <div class="tab-content" id="tab-content">
+{{ tab.content | replace('[', '<span id="section-' ~ (tab.content[:tab.content.find('[')].count('\n') + 1) ~ '" class="section-header">[') | replace(']', ']</span>') | safe }}
+    </div>
+
+    <footer class="tab-footer">
+        <a href="/" class="back-link">&larr; Back to all tabs</a>
+    </footer>
+</article>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/auto-scroll.js"></script>
+<script>
+    // Initialize auto-scroll
+    const tabContent = document.getElementById('tab-content');
+    const autoScroll = new AutoScroll(tabContent);
+
+    const toggleBtn = document.getElementById('auto-scroll-toggle');
+    const speedControl = document.getElementById('speed-control');
+
+    toggleBtn.addEventListener('click', () => {
+        autoScroll.toggle();
+        toggleBtn.classList.toggle('active', autoScroll.isScrolling);
+        speedControl.style.display = autoScroll.isScrolling ? 'flex' : 'none';
+    });
+
+    // Speed buttons
+    document.querySelectorAll('.speed-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            autoScroll.setSpeed(btn.dataset.speed);
+        });
+    });
+
+    // Tap anywhere on content to toggle (for hands-free practice)
+    tabContent.addEventListener('click', (e) => {
+        if (e.target.tagName !== 'A') {
+            autoScroll.toggle();
+            toggleBtn.classList.toggle('active', autoScroll.isScrolling);
+            speedControl.style.display = autoScroll.isScrolling ? 'flex' : 'none';
+        }
+    });
+</script>
+{% endblock %}

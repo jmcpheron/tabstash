@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}{{ artist_name }} - TabStash{% endblock %}
+
+{% block content %}
+<div class="artist-page">
+    <header class="artist-header">
+        <a href="/" class="back-link">&larr; All Artists</a>
+        <h1>{{ artist_name }}</h1>
+        <p class="tab-count">{{ tabs | length }} tab{% if tabs | length != 1 %}s{% endif %}</p>
+    </header>
+
+    <ul class="tab-list">
+        {% for tab in tabs %}
+        <li class="tab-item">
+            <a href="/tabs/{{ tab.artist_slug }}/{{ tab.slug }}.html" class="tab-link">
+                <span class="tab-title">{{ tab.metadata.title }}</span>
+                <div class="tab-meta-inline">
+                    {% if tab.metadata.difficulty %}
+                    <span class="meta-badge-small difficulty-{{ tab.metadata.difficulty }}">{{ tab.metadata.difficulty }}</span>
+                    {% endif %}
+                    {% if tab.metadata.capo > 0 %}
+                    <span class="meta-badge-small">Capo {{ tab.metadata.capo }}</span>
+                    {% endif %}
+                </div>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
