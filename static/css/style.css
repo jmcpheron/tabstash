@@ -204,6 +204,65 @@ a:hover {
     color: var(--color-text-muted);
 }
 
+/* Featured Section */
+.featured-section {
+    margin-bottom: var(--space-xl);
+}
+
+.featured-section h2 {
+    font-size: 1.1rem;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-md);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.featured-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-md);
+}
+
+.featured-card {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-lg);
+    background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg-tertiary) 100%);
+    border-radius: 12px;
+    border: 2px solid var(--color-accent);
+    min-height: 120px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.featured-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.featured-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: var(--space-xs);
+}
+
+.featured-artist {
+    font-size: 1rem;
+    color: var(--color-accent);
+    margin-bottom: var(--space-sm);
+}
+
+.featured-meta {
+    display: flex;
+    gap: var(--space-sm);
+    margin-top: auto;
+}
+
+.format-compact {
+    background: var(--color-accent);
+    color: white;
+}
+
 /* Browse Section */
 .browse-section {
     margin-bottom: var(--space-xl);

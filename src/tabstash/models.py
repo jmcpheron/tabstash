@@ -17,6 +17,8 @@ class TabMetadata(BaseModel):
     difficulty: Optional[str] = None
     bpm: Optional[int] = Field(default=None, ge=20, le=300)
     tags: list[str] = Field(default_factory=list)
+    format: str = "full"  # "full" for traditional tabs, "compact" for chord charts
+    featured: bool = False
 
     @field_validator("title", "artist")
     @classmethod

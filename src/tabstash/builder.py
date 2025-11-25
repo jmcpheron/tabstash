@@ -110,9 +110,13 @@ class SiteBuilder:
             for slug, artist_tabs in sorted(tabs_by_artist.items())
         ]
 
+        # Get featured tabs
+        featured_tabs = [tab for tab in tabs if tab.metadata.featured]
+
         html = template.render(
             tabs=tabs,
             artists=artists,
+            featured_tabs=featured_tabs,
             total_tabs=len(tabs),
         )
         (self.output_dir / "index.html").write_text(html)

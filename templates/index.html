@@ -15,6 +15,28 @@
         <div id="search-results" class="search-results"></div>
     </div>
 
+    {% if featured_tabs %}
+    <section class="featured-section">
+        <h2>Featured</h2>
+        <div class="featured-grid">
+            {% for tab in featured_tabs %}
+            <a href="{{ base_url }}/tabs/{{ tab.artist_slug }}/{{ tab.slug }}.html" class="featured-card">
+                <span class="featured-title">{{ tab.metadata.title }}</span>
+                <span class="featured-artist">{{ tab.metadata.artist }}</span>
+                <div class="featured-meta">
+                    {% if tab.metadata.key %}
+                    <span class="meta-badge-small">{{ tab.metadata.key }}</span>
+                    {% endif %}
+                    {% if tab.metadata.format == "compact" %}
+                    <span class="meta-badge-small format-compact">chord chart</span>
+                    {% endif %}
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
     <section class="browse-section">
         <h2>Browse by Artist</h2>
         <div class="artist-grid">
