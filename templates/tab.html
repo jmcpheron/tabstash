@@ -48,7 +48,33 @@
             <button class="speed-btn active" data-speed="medium">Medium</button>
             <button class="speed-btn" data-speed="fast">Fast</button>
         </div>
+
+        <!-- Metronome controls -->
+        <div class="metronome-controls">
+            <button id="metronome-toggle" class="control-btn">
+                <span class="metronome-icon">&#9835;</span>
+                <span class="btn-text">Metronome</span>
+            </button>
+
+            <div class="metronome-settings" id="metronome-settings" style="display: none;">
+                <div class="bpm-control">
+                    <button class="bpm-adjust" id="bpm-down" aria-label="Decrease BPM">-</button>
+                    <input type="number" id="bpm-input" class="bpm-input"
+                           value="{{ tab.metadata.bpm or 120 }}" min="20" max="300" step="1"
+                           aria-label="Beats per minute">
+                    <span class="bpm-label">BPM</span>
+                    <button class="bpm-adjust" id="bpm-up" aria-label="Increase BPM">+</button>
+                </div>
+                <button id="sync-toggle" class="sync-btn" title="Sync scroll speed to BPM">
+                    <span class="sync-icon">&#128279;</span>
+                    <span class="sync-text">Sync</span>
+                </button>
+            </div>
+        </div>
     </div>
+
+    <!-- Beat indicator (visual pulse) -->
+    <div class="beat-indicator" id="beat-indicator" aria-hidden="true"></div>
 
     <div class="tab-content" id="tab-content">
 {{ tab.content | replace('[', '<span id="section-' ~ (tab.content[:tab.content.find('[')].count('\n') + 1) ~ '" class="section-header">[') | replace(']', ']</span>') | safe }}
@@ -62,6 +88,7 @@
 
 {% block scripts %}
 <script src="{{ base_url }}/static/js/auto-scroll.js"></script>
+<script src="{{ base_url }}/static/js/metronome.js"></script>
 <script>
     // Initialize auto-scroll
     const tabContent = document.getElementById('tab-content');
@@ -91,6 +118,80 @@
             autoScroll.toggle();
             toggleBtn.classList.toggle('active', autoScroll.isScrolling);
             speedControl.style.display = autoScroll.isScrolling ? 'flex' : 'none';
+        }
+    });
+
+    // ========================================
+    // Metronome
+    // ========================================
+
+    const beatIndicator = document.getElementById('beat-indicator');
+
+    function onBeat(beatCount, isAccent) {
+        beatIndicator.classList.remove('pulse', 'accent');
+        // Force reflow to restart animation
+        void beatIndicator.offsetWidth;
+        beatIndicator.classList.add('pulse');
+        if (isAccent) {
+            beatIndicator.classList.add('accent');
+        }
+    }
+
+    const initialBpm = parseInt('{{ tab.metadata.bpm or 120 }}', 10);
+
+    const metronome = new Metronome({
+        bpm: initialBpm,
+        onBeat: onBeat,
+        onBpmChange: (bpm) => {
+            document.getElementById('bpm-input').value = bpm;
+            autoScroll.updateSyncBpm(bpm);
+        }
+    });
+
+    // Metronome toggle
+    const metronomeToggle = document.getElementById('metronome-toggle');
+    const metronomeSettings = document.getElementById('metronome-settings');
+
+    metronomeToggle.addEventListener('click', () => {
+        const isRunning = metronome.toggle();
+        metronomeToggle.classList.toggle('active', isRunning);
+        metronomeSettings.style.display = isRunning ? 'flex' : 'none';
+    });
+
+    // BPM controls
+    const bpmInput = document.getElementById('bpm-input');
+    const bpmDown = document.getElementById('bpm-down');
+    const bpmUp = document.getElementById('bpm-up');
+
+    bpmInput.addEventListener('change', () => {
+        metronome.setBpm(bpmInput.value);
+    });
+
+    bpmDown.addEventListener('click', () => {
+        metronome.setBpm(metronome.getBpm() - 5);
+    });
+
+    bpmUp.addEventListener('click', () => {
+        metronome.setBpm(metronome.getBpm() + 5);
+    });
+
+    // Sync toggle
+    const syncToggle = document.getElementById('sync-toggle');
+    let syncEnabled = false;
+
+    syncToggle.addEventListener('click', () => {
+        syncEnabled = !syncEnabled;
+        syncToggle.classList.toggle('active', syncEnabled);
+
+        if (syncEnabled) {
+            // Calculate pixels per beat based on line height
+            const lineHeight = parseFloat(getComputedStyle(tabContent).lineHeight) || 20;
+            const linesPerBeat = 0.25; // Advance 1/4 line per beat
+            const pixelsPerBeat = lineHeight * linesPerBeat;
+
+            autoScroll.enableSync(pixelsPerBeat, metronome.getBpm());
+        } else {
+            autoScroll.disableSync();
         }
     });
 </script>

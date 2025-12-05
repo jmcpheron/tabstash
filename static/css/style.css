@@ -570,3 +570,172 @@ a:hover {
 .scroll-indicator.visible {
     opacity: 1;
 }
+
+/* Metronome Controls */
+.metronome-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+}
+
+.metronome-icon {
+    font-size: 1rem;
+}
+
+.metronome-settings {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+}
+
+/* BPM Control */
+.bpm-control {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    background: var(--color-bg-tertiary);
+    border-radius: 8px;
+    padding: var(--space-xs);
+}
+
+.bpm-adjust {
+    width: 44px;
+    height: 44px;
+    border: none;
+    background: var(--color-bg-secondary);
+    border-radius: 6px;
+    color: var(--color-text);
+    font-size: 1.25rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bpm-adjust:hover {
+    background: var(--color-accent);
+    color: white;
+}
+
+.bpm-adjust:active {
+    transform: scale(0.95);
+}
+
+.bpm-input {
+    width: 60px;
+    height: 44px;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 600;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    color: var(--color-text);
+    -moz-appearance: textfield;
+}
+
+.bpm-input::-webkit-outer-spin-button,
+.bpm-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.bpm-input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+}
+
+.bpm-label {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    margin-right: var(--space-xs);
+}
+
+/* Sync Button */
+.sync-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    font-size: 0.85rem;
+    min-height: 44px;
+}
+
+.sync-btn:hover {
+    border-color: var(--color-accent);
+    color: var(--color-text);
+}
+
+.sync-btn.active {
+    background: var(--color-section);
+    border-color: var(--color-section);
+    color: white;
+}
+
+.sync-icon {
+    font-size: 0.9rem;
+}
+
+/* Beat Indicator - Fixed position visual pulse */
+.beat-indicator {
+    position: fixed;
+    bottom: calc(var(--space-lg) + 50px);
+    right: var(--space-lg);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    opacity: 0;
+    pointer-events: none;
+    transition: none;
+}
+
+.beat-indicator.pulse {
+    opacity: 1;
+    animation: beat-pulse 0.15s ease-out;
+}
+
+.beat-indicator.accent {
+    background: var(--color-chord);
+    width: 24px;
+    height: 24px;
+}
+
+@keyframes beat-pulse {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1.5);
+    }
+}
+
+/* Responsive adjustments for tab controls */
+@media (max-width: 600px) {
+    .tab-controls {
+        flex-wrap: wrap;
+    }
+
+    .metronome-controls {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .metronome-settings {
+        justify-content: space-between;
+    }
+
+    .bpm-control {
+        flex: 1;
+    }
+}

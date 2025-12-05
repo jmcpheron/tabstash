@@ -25,6 +25,11 @@ class AutoScroll {
         };
         this.currentSpeed = this.speeds.medium;
 
+        // Sync mode (BPM-driven scrolling)
+        this.syncMode = false;
+        this.syncPixelsPerBeat = 0;
+        this.lastManualSpeed = this.currentSpeed;
+
         // Create scroll indicator
         this.indicator = document.createElement('div');
         this.indicator.className = 'scroll-indicator';
@@ -70,7 +75,34 @@ class AutoScroll {
     setSpeed(speedName) {
         if (this.speeds[speedName]) {
             this.currentSpeed = this.speeds[speedName];
+            this.lastManualSpeed = this.currentSpeed;
         }
+    }
+
+    // Enable sync mode with BPM-driven scrolling
+    enableSync(pixelsPerBeat, bpm) {
+        this.syncMode = true;
+        this.syncPixelsPerBeat = pixelsPerBeat;
+        // Calculate speed: pixels/beat * beats/minute / 60 = pixels/second
+        this.currentSpeed = (pixelsPerBeat * bpm) / 60;
+    }
+
+    // Disable sync mode and restore manual speed
+    disableSync() {
+        this.syncMode = false;
+        this.currentSpeed = this.lastManualSpeed;
+    }
+
+    // Update sync speed when BPM changes
+    updateSyncBpm(bpm) {
+        if (this.syncMode) {
+            this.currentSpeed = (this.syncPixelsPerBeat * bpm) / 60;
+        }
+    }
+
+    // Check if in sync mode
+    isSynced() {
+        return this.syncMode;
     }
 
     scroll() {
