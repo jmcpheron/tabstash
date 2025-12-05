@@ -15,6 +15,7 @@ class AutoScroll {
         this.isScrolling = false;
         this.lastTime = 0;
         this.animationId = null;
+        this.accumulatedScroll = 0;  // Accumulator for sub-pixel values (iOS fix)
 
         // Speed in pixels per second
         this.speeds = {
@@ -36,13 +37,21 @@ class AutoScroll {
 
         this.isScrolling = true;
         this.lastTime = performance.now();
+        this.accumulatedScroll = 0;  // Reset accumulator
         this.indicator.classList.add('visible');
+
+        // Disable smooth scrolling during auto-scroll (fixes iOS Safari)
+        document.documentElement.style.scrollBehavior = 'auto';
+
         this.scroll();
     }
 
     stop() {
         this.isScrolling = false;
         this.indicator.classList.remove('visible');
+
+        // Restore smooth scrolling
+        document.documentElement.style.scrollBehavior = '';
 
         if (this.animationId) {
             cancelAnimationFrame(this.animationId);
@@ -71,7 +80,18 @@ class AutoScroll {
         const delta = (now - this.lastTime) / 1000;
         this.lastTime = now;
 
-        window.scrollBy(0, this.currentSpeed * delta);
+        // Accumulate fractional pixels (iOS Safari ignores sub-pixel scrollBy)
+        this.accumulatedScroll += this.currentSpeed * delta;
+
+        // Only scroll when we have at least 1 whole pixel
+        if (this.accumulatedScroll >= 1) {
+            const scrollAmount = Math.floor(this.accumulatedScroll);
+            this.accumulatedScroll -= scrollAmount;
+
+            // Use scrollTo for better iOS Safari compatibility
+            const currentY = window.pageYOffset || document.documentElement.scrollTop;
+            window.scrollTo(0, currentY + scrollAmount);
+        }
 
         // Check if we've reached the bottom
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;

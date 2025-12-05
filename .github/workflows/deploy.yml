@@ -15,7 +15,31 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Set up Python
+        run: uv python install 3.11
+
+      - name: Install dependencies
+        run: uv sync --extra dev
+
+      - name: Install Playwright browsers
+        run: uv run playwright install --with-deps chromium webkit
+
+      - name: Run unit tests
+        run: uv run pytest tests/ -v --ignore=tests/test_browser.py
+
+      - name: Run browser tests
+        run: uv run pytest tests/test_browser.py -v --browser chromium --browser webkit
+
   build:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
